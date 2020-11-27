@@ -1,0 +1,46 @@
+syntax="proto3";
+
+package mq;
+option go_package=".;mq";
+
+option php_metadata_namespace="DucCnzj\\EventBus\\Mq";
+option php_namespace="DucCnzj\\EventBus\\Mq";
+
+message Pub {
+  string queue = 1;
+  string data = 2;
+}
+
+message Response {
+  bool success = 1;
+  string id = 2;
+  string data = 3;
+  string queue = 4;
+  string runAfter = 5;
+  uint64 delaySeconds = 6;
+}
+
+message Sub {
+  string queue = 1;
+}
+
+message QueueId {
+  string id = 1;
+}
+
+message DelayPublishRequest {
+  string queue = 1;
+  string data = 2;
+  uint64 seconds = 3;
+}
+
+service Mq {
+  // php:inline
+  rpc publish(Pub) returns (Response);
+  // php:inline
+  rpc delayPublish(DelayPublishRequest) returns (Response);
+  // php:inline
+  rpc subscribe(Sub) returns (Response);
+  // php:inline
+  rpc ack(QueueId) returns (Response);
+}
